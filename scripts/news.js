@@ -30,11 +30,11 @@ const getFetchData = async () => {
       `https://newsapi.org/v2/top-headlines?category=science&apiKey=${apiKey}`
     );
     const data = await info.json();
-    if (data.status !== "ok") {
-      throw new Error(
-        "Something wrong with the network, reload the page again"
-      );
-    }
+    // if (data.status !== "ok") {
+    //   throw new Error(
+    //     "Something wrong with the network, reload the page again"
+    //   );
+    // }
     return data;
   } catch (err) {
     console.log("error in getFetchData(): ", err);
