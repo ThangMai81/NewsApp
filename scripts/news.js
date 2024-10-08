@@ -30,11 +30,11 @@ const getFetchData = async () => {
       `https://newsapi.org/v2/top-headlines?category=science&apiKey=${apiKey}`
     );
     const data = await info.json();
-    // if (data.status !== "ok") {
-    //   throw new Error(
-    //     "Something wrong with the network, reload the page again"
-    //   );
-    // }
+    if (data.status !== "ok") {
+      throw new Error(
+        "Something wrong with the network, reload the page again"
+      );
+    }
     return data;
   } catch (err) {
     console.log("error in getFetchData(): ", err);
@@ -104,6 +104,10 @@ async function renderFirstPage() {
     }
   } catch (err) {
     console.log("error in function renderFirstPage(): ", err);
+    const errMsg = document.createElement("p");
+    errMsg.innerHTML =
+      "Cannot render because the API from newsAPI is not available on browser (only for localhost 😭)";
+    newsContainerEl.appendChild(errMsg);
   }
 }
 // +++ always render first page when user get first access to the news session
