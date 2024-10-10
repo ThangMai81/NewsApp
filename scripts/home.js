@@ -28,6 +28,7 @@ function renderLogOut(userArr, user) {
     loginModalPEl.textContent = `Welcome ${data.firstname}`;
   }
   loginModalBtnEl.classList.add("hidden");
+  logoutBtnEl.classList.remove("hidden");
 }
 aTagEl.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -60,14 +61,15 @@ function changeHomepage() {
   const currentUser = JSON.parse(getFromStorage("currentUser", "[]"));
   // get data after register
   const currentUserArr = JSON.parse(getFromStorage("user-array", "[]"));
-  if (currentUser !== []) {
+  logoutBtnEl.classList.add("hidden");
+  if (Object.keys(currentUser).length > 1) {
     const existUser = currentUserArr.filter(
       (user) =>
         user.username === currentUser.username &&
         user.password === currentUser.password
     );
     // type valid user in database
-    if (existUser !== []) {
+    if (existUser.length > 0) {
       renderLogOut(currentUserArr, currentUser);
     }
   }
@@ -91,8 +93,8 @@ let homepageRegisterClicked = JSON.parse(
 if (JSON.stringify(homepageLoginClicked) !== "[]") {
   clickLogin = true;
   changeHomepage();
-  saveToStorage("homepage-login-clicked", JSON.stringify([]));
-  homepageLoginClicked = [];
+  saveToStorage("homepage-login-clicked", JSON.stringify({ clicked: true }));
+  // homepageLoginClicked = [];
 } // if register has been clicked
 else if (JSON.stringify(homepageRegisterClicked) !== "[]") {
   // get data after login (from login page -> homepage must click homepage icon in sidebar)
@@ -103,8 +105,8 @@ else if (JSON.stringify(homepageRegisterClicked) !== "[]") {
   if (currentUserArr !== prevCurrentUserArr) {
     renderLogOut(currentUserArr, currentUser);
   }
-  saveToStorage("homepage-register-clicked", JSON.stringify([]));
-  homepageRegisterClicked = [];
+  saveToStorage("homepage-register-clicked", JSON.stringify({ clicked: true }));
+  // homepageRegisterClicked = [];
 } else {
   loginModalPEl.textContent = `Please Login or Register`;
   loginModalBtnEl.classList.remove("hidden");
@@ -112,8 +114,10 @@ else if (JSON.stringify(homepageRegisterClicked) !== "[]") {
 
 // -------------------------Log out------------------------
 logoutBtnEl.addEventListener("click", function () {
-  if (clickLogin === true) {
+  if (clickLogin === true || clickRegister === true) {
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("homepage-register-clicked");
+    localStorage.removeItem("homepage-login-clicked");
     window.location.href = "./pages/login.html";
   } else {
     alert("Not login yet, please login or register first");

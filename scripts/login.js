@@ -8,6 +8,7 @@ const userArr = JSON.parse(getFromStorage("user-array", "[]"));
 // ------------------------ handling submit button ------------------------
 let validate = true;
 sbmBtnEl.addEventListener("click", function () {
+  validate = true;
   const data = {
     username: usernameEl.value,
     password: passwordEl.value,
@@ -24,9 +25,8 @@ sbmBtnEl.addEventListener("click", function () {
     userArr.filter(
       (user) =>
         user.username === data.username && user.password === data.password
-    ) === []
+    ).length === 0
   ) {
-    console.log("False!");
     alert("Wrong account or password, please type again!");
     validate = false;
     return;
@@ -35,6 +35,7 @@ sbmBtnEl.addEventListener("click", function () {
   if (validate === true) {
     // save username and password into localStorage, for another to use
     saveToStorage("currentUser", JSON.stringify(data));
+    saveToStorage("homepage-login-clicked", JSON.stringify({ clicked: true }));
     alert("Login succesfully!");
     // const loginValidClicked = {
     //   clicked: "true",

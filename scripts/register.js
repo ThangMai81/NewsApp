@@ -63,6 +63,9 @@ let validate = true;
 
 registerBtnEl.addEventListener("click", () => {
   // data of user defined in object type
+  // console.log(userArr);
+  // alert(`validate: ${userArr}`);
+  validate = true;
   const data = {
     firstname: firstnameEl.value,
     lastname: lastnameEl.value,
@@ -83,13 +86,14 @@ registerBtnEl.addEventListener("click", () => {
     return;
   }
   // +++ Check whether username is the same as the previous registered username or not
-  userArr.forEach((user) => {
-    if (user.username === data.username) {
-      alert("username already used, use another!");
-      validate = false;
-      return;
-    }
-  });
+  if (userArr.length > 0)
+    userArr.forEach((user) => {
+      if (user.username === data.username) {
+        alert("username already used, use another!");
+        validate = false;
+        return;
+      }
+    });
   // +++ Check whether confirm password is the same as password or not
   if (data.cfmPassword !== data.password) {
     alert("Typing wrong confirm password, please type again!");
@@ -103,6 +107,7 @@ registerBtnEl.addEventListener("click", () => {
     return;
   }
   if (validate === true) {
+    alert("Register successfully!");
     userArr.push(parseUser(data));
     // convert userArr from array of class to array of objects
     // objectArr = [];
@@ -110,6 +115,10 @@ registerBtnEl.addEventListener("click", () => {
     //   objectArr.push(parseUser(user));
     // });
     saveToStorage(KEY, JSON.stringify(userArr));
+    saveToStorage(
+      "currentUser",
+      JSON.stringify({ username: data.username, password: data.password })
+    );
     window.location.href = "../index.html";
   }
 });
